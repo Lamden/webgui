@@ -1,2 +1,4 @@
 # webgui
-Web GUI for Cilantro and Seneca
+Web GUI for AnarchyNet
+
+IN DEVELOPMENT
