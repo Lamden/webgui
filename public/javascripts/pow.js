@@ -56,7 +56,7 @@ function find(o, complexity=3) {
  *      valid:      Whether or not the POW on the object checks out
  */
 function check(o, proof, complexity=3) {
-    //assert(proof.length === 32);
+    assert(proof.length === 32);
     const leadZeros = Array(complexity+1).join('0');
     const shaObj = new jsSHA('SHA3-256', "TEXT");
     shaObj.update(helpers.ab2str(o) + helpers.hex2str(proof));
