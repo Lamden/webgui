@@ -8,8 +8,13 @@
 
 PORT ?= 3000
 
-install: 	## Install node deps
+schemas:    ## Compile the capnp schemas into js format
+	cd capnp-schemas && capnpc -o js transaction.capnp && mv transaction.capnp.js ../public/javascripts/
+
+adddeps:    ## Download/install all dependencies
 	npm install
+
+install: adddeps test 	## Install deps and run tests
 
 start: install ## Start the local webserver for testing on PORT
 	nodemon ./app.js localhost $(PORT)

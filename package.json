@@ -8,12 +8,15 @@
   },
   "dependencies": {
     "assert": "^1.4.1",
+    "capnp-ts": "^0.4.0",
+    "capnpc-js": "^0.4.0",
     "chai": "^4.2.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "^2.6.1",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
+    "jssha": "^2.3.1",
     "mocha": "^5.2.0",
     "morgan": "~1.9.0",
     "tweetnacl": "^1.0.0"
