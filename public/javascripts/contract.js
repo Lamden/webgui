@@ -12,7 +12,24 @@ const Value = transactionSchemas.Value;
 const Map = transactionSchemas.Map;
 
 class CurrencyContractTransaction {
-    constructor(sender_sk, stamps_supplied, nonce, to, amount, contract_name='currency', func_name='transfer') {
+    constructor() {
+        this.sender_sk = null;
+        this.sender = null;
+        this.stamps_supplied = null;
+        this.nonce = null;
+        this.to = null;
+        this.amount = null;
+        this.contract_name = null;
+        this.func_name = null;
+        this.signature = null;
+        this.pow = null;
+    }
+
+    // PSUEDO-CONSTRUCTOR
+    create(sender_sk, stamps_supplied, nonce, to, amount, contract_name='currency', func_name='transfer') {
+        // Fill the class objects for later use
+        // These are initialized here instead of in the constructor so we can emulate having multiple
+        // constructors (as with in python @class_method)
         this.sender_sk = sender_sk;
         this.stamps_supplied = stamps_supplied;
         this.nonce = nonce;
@@ -20,9 +37,7 @@ class CurrencyContractTransaction {
         this.amount = amount;
         this.contract_name = contract_name;
         this.func_name = func_name;
-    }
 
-    create() {
         // Initialize capnp objects
         const struct = new capnp.Message();
         const tx = struct.initRoot(ContractTransaction);
@@ -58,14 +73,14 @@ class CurrencyContractTransaction {
         const plbytes = new Uint8Array(message.toArrayBuffer());
 
         // Get signature
-        const sig = wallet.sign(this.sender_sk, plbytes);
-        const sigbuf = helpers.str2ab(sig);
+        this.signature = wallet.sign(this.sender_sk, plbytes);
+        const sigbuf = helpers.str2ab(this.signature);
         const msig = metadata.initSignature(sigbuf.byteLength);
         msig.copyBuffer(sigbuf);
 
         // Calculate POW
-        const p = pow.find(plbytes);
-        const powbuf = helpers.str2ab(p.pow);
+        this.pow = pow.find(plbytes);
+        const powbuf = helpers.str2ab(this.pow.pow);
         const mpow = metadata.initProof(powbuf.byteLength);
         mpow.copyBuffer(powbuf);
 
@@ -73,7 +88,27 @@ class CurrencyContractTransaction {
         const pl = tx.initPayload(plbytes.byteLength);
         pl.copyBuffer(plbytes);
 
-        return struct.toPackedArrayBuffer();
+        return struct;
+    }
+
+    toBytesPacked() {
+        return this.tx.toPackedArrayBuffer();
+    }
+
+    toBytes() {
+        return this.tx.toArrayBuffer();
+    }
+
+    deserializePayload(i) {
+        const msg = new capnp.Message(i);
+        const payload = msg.getRoot(ContractPayload);
+        return payload;
+    }
+
+    deserializeData(i) {
+        const msg = new capnp.Message(i);
+        const tx = msg.getRoot(ContractTransaction);
+        return tx;
     }
 }
 
