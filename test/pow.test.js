@@ -28,6 +28,7 @@ describe("POW", function () {
             var object = '1234';
             try {
                 var p = pow.find(object);
+                check(object, p.pow);
                 throw "generate pow succeeded with string not of length 32";
             } catch {}
         });
